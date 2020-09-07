@@ -1,8 +1,25 @@
+import datetime as dt
+
+class Tarjeta(object):
+
+    def __init__(self, numero, nombre,  fecha_vencimiento):
+        self.numero = numero
+        self.nombre = nombre
+        self.fecha_vencimiento = dt.datetime.strptime(fecha_vencimiento, '%m/%y')
+
+
+
+class YearMonth:
+    def __init__(self, fecha):
+        self._fecha = fecha
+        self.mes = fecha.month
+        self.ano = fecha.year
+
+
 
 
 
 class Carrito(object):
-
 
     def __init__(self, catalogo):
         self._carrito = []
@@ -28,21 +45,11 @@ class Carrito(object):
         return sum
 
     def _precio_libro(self, libro):
-        for i in self._catalogo:
-            if i[0] == libro:
-                return i[1]
-
-
-
+        if libro in self._catalogo:
+            return self._catalogo[libro]
 
     def esta_en_catalogo(self, libro):
-        for l in self._catalogo:
-            if l[0] == libro:
-                return True
-
-        return False
-
-
+        return libro in self._catalogo
 
 
 class Libro(object):
@@ -50,13 +57,23 @@ class Libro(object):
         self.title = title
 
 
-
 class Cajero(object):
-    def __init__(self, carrito):
+    def __init__(self, carrito, tarjeta):
         self._carrito = carrito
+        self._tarjeta = tarjeta
+
+
 
     def checkout(self):
-        if not self._carrito.es_vacio():
+        if not self._carrito.es_vacio() and self._es_valida():
             return f"Ticket:{self._carrito.total()}"
         else:
             raise Exception("No se puede checkout de carrito vacio")
+
+    def _es_valida(self):
+        return self._esta_vencida()
+
+    def _esta_vencida(self):
+        now = dt.datetime.now()
+        return self._tarjeta.fecha_vencimiento > now
+

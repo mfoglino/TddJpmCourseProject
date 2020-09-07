@@ -1,10 +1,14 @@
 import pytest
+import datetime as dt
 
-from book_shop.tienda_de_libros import Carrito, Libro, Cajero
+from book_shop.tienda_de_libros import Carrito, Libro, Cajero, YearMonth, Tarjeta
 
 
 def catalogo():
-    return [("un libro", 5), ("otro libro", 10)]
+    catalogo = {}
+    catalogo["un libro"] = 5
+    catalogo["otro libro"] = 10
+    return catalogo
 
 
 
@@ -83,7 +87,8 @@ def test_checkout_carrito_ok():
 
     carrito.add(libro)
 
-    cajero = Cajero(carrito)
+    tarjeta = Tarjeta("0001", "Juan Pepe", '08/22')
+    cajero = Cajero(carrito, tarjeta)
 
     ticket_con_total = "Ticket:5"
     assert cajero.checkout() == ticket_con_total
@@ -93,7 +98,23 @@ def test_checkout_carrito_ok():
 def test_no_se_puede_checkout_carrito_vacio():
     carrito = Carrito(catalogo())
 
-    cajero = Cajero(carrito)
+    tarjeta = Tarjeta("0001", "Juan Pepe", '08/22')
+    cajero = Cajero(carrito, tarjeta)
+
+    with pytest.raises(Exception, match="No se puede checkout de carrito vacio"):
+        cajero.checkout()
+
+
+
+def test_no_se_puede_checkout_con_tarjeta_vencida():
+
+    import datetime as dt
+
+
+    carrito = Carrito(catalogo())
+
+    tarjeta = Tarjeta("0001", "Juan Pepe", '11/19')
+    cajero = Cajero(carrito, tarjeta)
 
     with pytest.raises(Exception, match="No se puede checkout de carrito vacio"):
         cajero.checkout()
