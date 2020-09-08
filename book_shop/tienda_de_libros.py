@@ -1,5 +1,12 @@
 import datetime as dt
 
+ERROR_CHECKOUT_DE_CARRITO_VACIO = "No se puede checkout de carrito vacio"
+
+ERROR_NO_PERTENECE_A_LA_EDITORIAL = "Ese libro no pertenece a la editorial"
+
+ERROR_TARJETA_VENCIDA = "Error, tarjeta vencida!"
+
+
 class Tarjeta(object):
 
     def __init__(self, numero, nombre,  fecha_vencimiento):
@@ -33,7 +40,7 @@ class Carrito(object):
             for _ in range(cantidad):
                 self._carrito.append(libro)
         else:
-            raise Exception("Ese libro no pertenece a la editorial")
+            raise Exception(ERROR_NO_PERTENECE_A_LA_EDITORIAL)
 
     def contiene(self, libro):
         return libro in self._carrito
@@ -65,15 +72,18 @@ class Cajero(object):
 
 
     def checkout(self):
-        if not self._carrito.es_vacio() and self._es_valida():
-            return f"Ticket:{self._carrito.total()}"
+        if not self._carrito.es_vacio():
+            if self._es_valida():
+                return f"Ticket:{self._carrito.total()}"
+            else:
+                raise Exception(ERROR_TARJETA_VENCIDA)
         else:
-            raise Exception("No se puede checkout de carrito vacio")
+            raise Exception(ERROR_CHECKOUT_DE_CARRITO_VACIO)
 
     def _es_valida(self):
-        return self._esta_vencida()
+        return not self._esta_vencida()
 
     def _esta_vencida(self):
         now = dt.datetime.now()
-        return self._tarjeta.fecha_vencimiento > now
+        return self._tarjeta.fecha_vencimiento < now
 

@@ -1,7 +1,7 @@
 import pytest
-import datetime as dt
 
-from book_shop.tienda_de_libros import Carrito, Libro, Cajero, YearMonth, Tarjeta
+from book_shop.tienda_de_libros import Carrito, Cajero, Tarjeta, ERROR_TARJETA_VENCIDA, \
+    ERROR_NO_PERTENECE_A_LA_EDITORIAL, ERROR_CHECKOUT_DE_CARRITO_VACIO
 
 
 def catalogo():
@@ -62,7 +62,7 @@ def test_editorial():
 
     no_editorial_libro = "un libro de no la editorial"
 
-    with pytest.raises(Exception, match="Ese libro no pertenece a la editorial"):
+    with pytest.raises(Exception, match=ERROR_NO_PERTENECE_A_LA_EDITORIAL):
         carrito.add(no_editorial_libro)
 
 
@@ -76,7 +76,6 @@ def test_el_carrito_tiene_total_correcto():
     carrito.add(libro)
 
     assert carrito.total() == 5
-
 
 
 
@@ -95,28 +94,29 @@ def test_checkout_carrito_ok():
 
 
 
+
 def test_no_se_puede_checkout_carrito_vacio():
+
+
     carrito = Carrito(catalogo())
 
     tarjeta = Tarjeta("0001", "Juan Pepe", '08/22')
     cajero = Cajero(carrito, tarjeta)
 
-    with pytest.raises(Exception, match="No se puede checkout de carrito vacio"):
+    with pytest.raises(Exception, match=ERROR_CHECKOUT_DE_CARRITO_VACIO):
         cajero.checkout()
 
 
 
 def test_no_se_puede_checkout_con_tarjeta_vencida():
-
-    import datetime as dt
-
-
     carrito = Carrito(catalogo())
+    libro = "un libro"
+    carrito.add(libro)
 
     tarjeta = Tarjeta("0001", "Juan Pepe", '11/19')
     cajero = Cajero(carrito, tarjeta)
 
-    with pytest.raises(Exception, match="No se puede checkout de carrito vacio"):
+    with pytest.raises(Exception, match=ERROR_TARJETA_VENCIDA):
         cajero.checkout()
 
 
