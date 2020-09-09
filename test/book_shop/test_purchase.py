@@ -170,4 +170,3 @@ def test_error_al_transaccion_merchant_caido():
     with pytest.raises(Exception, match=ERROR_MERCHANT_CAIDO):
         cajero.checkout()
 
-

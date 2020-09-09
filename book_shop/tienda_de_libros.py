@@ -26,16 +26,6 @@ class Tarjeta(object):
 
 
 
-# class YearMonth:
-#     def __init__(self, fecha):
-#         self._fecha = fecha
-#         self.mes = fecha.month
-#         self.ano = fecha.year
-
-
-
-
-
 class Carrito(object):
 
     def __init__(self, catalogo):
@@ -99,7 +89,7 @@ class Cajero:
             raise Exception(ERROR_TARJETA_VENCIDA)
 
     def assert_carrito_no_vacio(self):
-        if self._carrito.es_vacio():
+        if self._carrito.es_carrito_vacio():
             raise Exception(ERROR_CHECKOUT_DE_CARRITO_VACIO)
 
     def _es_valida(self):
@@ -110,36 +100,23 @@ class Cajero:
         return self._tarjeta.fecha_vencimiento < now
 
 
+from abc import ABC
 
-
-class Merchant:
-    def __init__(self):
-        pass
-
+class Merchant(ABC):
     def debito(self, amount, tarjeta):
         pass
 
 
-
 class MerchantOK(Merchant):
-    def __init__(self):
-        pass
-
     def debito(self, amount, tarjeta):
         return "OK"
 
 
 class MerchantNoCredit(Merchant):
-    def __init__(self):
-        pass
-
     def debito(self, amount, tarjeta):
         raise Exception(ERROR_TARJETA_SIN_CREDITO)
 
 
 class MerchantCaido(Merchant):
-    def __init__(self):
-        pass
-
     def debito(self, amount, tarjeta):
         raise Exception(ERROR_MERCHANT_CAIDO)
