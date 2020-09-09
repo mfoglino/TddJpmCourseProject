@@ -16,11 +16,11 @@ class Tarjeta(object):
 
 
 
-class YearMonth:
-    def __init__(self, fecha):
-        self._fecha = fecha
-        self.mes = fecha.month
-        self.ano = fecha.year
+# class YearMonth:
+#     def __init__(self, fecha):
+#         self._fecha = fecha
+#         self.mes = fecha.month
+#         self.ano = fecha.year
 
 
 
@@ -59,16 +59,18 @@ class Carrito(object):
         return libro in self._catalogo
 
 
+
 class Libro(object):
     def __init__(self, title):
         self.title = title
 
 
+
 class Cajero(object):
+
     def __init__(self, carrito, tarjeta):
         self._carrito = carrito
         self._tarjeta = tarjeta
-
 
 
     def checkout(self):
