@@ -15,7 +15,10 @@ class Aplicacion(object):
         if not self.es_cliente_valido(id_cliente):
             raise Exception(CLIENTE_INVALIDO)
 
-        if self._usuarios[id_cliente] != password :
+        self._es_usuario_con_password_incorrecta(id_cliente, password)
+
+    def _es_usuario_con_password_incorrecta(self, id_cliente, password):
+        if self._usuarios[id_cliente] != password:
             raise Exception(PASSWORD_INVALIDA)
 
     def es_cliente_valido(self, id):
